@@ -8,11 +8,11 @@ package com.raven.entity;
  *
  * @author bao
  */
-public class Account {
+public class Admin {
+
     private int id;
     private String username;
     private String password;
-    private boolean isExpired;
 
     public int getId() {
         return id;
@@ -38,13 +38,4 @@ public class Account {
         this.password = password;
     }
 
-    public boolean isIsExpired() {
-        return isExpired;
-    }
-
-    public void setIsExpired(boolean isExpired) {
-        this.isExpired = isExpired;
-    }
-    
-    
 }

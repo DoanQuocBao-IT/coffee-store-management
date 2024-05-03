@@ -11,10 +11,16 @@ import java.util.Date;
  * @author bao
  */
 public class Employee {
+
     private int id;
+    private String username;
+    private String password;
     private String name;
     private String phone;
-    private Date started_at;
+    private String gender;
+    private String user_type;
+    private Date joind_at;
+    private String status;
 
     public int getId() {
         return id;
@@ -22,6 +28,54 @@ public class Employee {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public Date getJoind_at() {
+        return joind_at;
+    }
+
+    public void setJoind_at(Date joind_at) {
+        this.joind_at = joind_at;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getName() {
@@ -40,13 +94,4 @@ public class Employee {
         this.phone = phone;
     }
 
-    public Date getStarted_at() {
-        return started_at;
-    }
-
-    public void setStarted_at(Date started_at) {
-        this.started_at = started_at;
-    }
-    
-    
 }
