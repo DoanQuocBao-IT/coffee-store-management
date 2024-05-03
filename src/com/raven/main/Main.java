@@ -75,6 +75,7 @@ public class Main extends javax.swing.JFrame {
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Coffee Store Management");
         setUndecorated(true);
 
         panelBorder1.setAutoscrolls(true);
