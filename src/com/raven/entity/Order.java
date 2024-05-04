@@ -5,7 +5,6 @@
 package com.raven.entity;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -16,7 +15,6 @@ public class Order {
     private int payment;
     private Date created_at;
     private Employee employee;
-    List<OrderItem> orders;
     private Voucher voucher;
 
     public int getId() {
@@ -49,14 +47,6 @@ public class Order {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-    }
-
-    public List<OrderItem> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderItem> orders) {
-        this.orders = orders;
     }
 
     public Voucher getVoucher() {

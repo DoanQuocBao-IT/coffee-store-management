@@ -1,6 +1,7 @@
 package com.raven.component;
 
 import com.raven.event.EventMenuSelected;
+import com.raven.main.Session;
 import com.raven.model.Model_Menu;
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -29,21 +30,35 @@ public class Menu extends javax.swing.JPanel {
     }
 
     private void init() {
-        listMenu1.addItem(new Model_Menu("1", "Dashboard", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("2", "UI Elements", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("3", "Comonents", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("4", "Forms Stuff", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("5", "Date Table", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        if (Session.isLoggedIn() && Session.getRole().equals("Employee")) {
+            jLabel2.setText(Session.getName() + "!");
+            jLabel4.setText(Session.getRole().equals("Admin") ? "Quản Trị Viên" : "Nhân Viên");
+            listMenu1.addItem(new Model_Menu("1", "Order", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("2", "Dashboard", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
 
-        listMenu1.addItem(new Model_Menu("", "My Data", Model_Menu.MenuType.TITLE));
-        listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
-        listMenu1.addItem(new Model_Menu("6", "Icons", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("7", "Sample Page", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("8", "Extra", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("9", "More", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("10", "Logout", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+            listMenu1.addItem(new Model_Menu("", "My Data", Model_Menu.MenuType.TITLE));
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+            listMenu1.addItem(new Model_Menu("3", "Shift", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("4", "Logout", Model_Menu.MenuType.MENU));
+
+        } else if (Session.isLoggedIn() && Session.getRole().equals("Admin")) {
+            listMenu1.addItem(new Model_Menu("1", "Dashboard", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("2", "UI Elements", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("3", "Comonents", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("4", "Forms Stuff", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("5", "Date Table", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+
+            listMenu1.addItem(new Model_Menu("", "My Data", Model_Menu.MenuType.TITLE));
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+            listMenu1.addItem(new Model_Menu("6", "Icons", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("7", "Sample Page", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("8", "Extra", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("9", "More", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("10", "Logout", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -52,6 +67,9 @@ public class Menu extends javax.swing.JPanel {
 
         panelMoving = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         listMenu1 = new com.raven.swing.ListMenu<>();
 
         panelMoving.setOpaque(false);
@@ -59,15 +77,35 @@ public class Menu extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/logo.png"))); // NOI18N
-        jLabel1.setText("Application");
+        jLabel1.setText("Coffee Management");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Semibold", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Nguyen Van Anh");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Chào mừng");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelMovingLayout = new javax.swing.GroupLayout(panelMoving);
         panelMoving.setLayout(panelMovingLayout);
         panelMovingLayout.setHorizontalGroup(
             panelMovingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMovingLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                .addGroup(panelMovingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMovingLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelMovingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelMovingLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelMovingLayout.setVerticalGroup(
@@ -75,7 +113,13 @@ public class Menu extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMovingLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1)
-                .addContainerGap())
+                .addGap(12, 12, 12)
+                .addGroup(panelMovingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addGap(13, 13, 13))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -89,8 +133,8 @@ public class Menu extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelMoving, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -127,6 +171,9 @@ public class Menu extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private com.raven.swing.ListMenu<String> listMenu1;
     private javax.swing.JPanel panelMoving;
     // End of variables declaration//GEN-END:variables

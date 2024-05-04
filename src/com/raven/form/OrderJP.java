@@ -9,12 +9,12 @@ package com.raven.form;
  *
  * @author RAVEN
  */
-public class Form_1 extends javax.swing.JPanel {
+public class OrderJP extends javax.swing.JPanel {
 
     /**
      * Creates new form Form_1
      */
-    public Form_1() {
+    public OrderJP() {
         initComponents();
     }
 
@@ -28,8 +28,6 @@ public class Form_1 extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-
-        setBackground(new java.awt.Color(242, 242, 242));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(106, 106, 106));

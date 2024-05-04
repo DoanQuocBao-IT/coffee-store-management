@@ -9,9 +9,11 @@ package com.raven.entity;
  * @author bao
  */
 public class OrderItem {
+
     private int id;
     private Properties beverage;
     private int inventory;
+    private Order order;
 
     public int getId() {
         return id;
@@ -36,6 +38,13 @@ public class OrderItem {
     public void setInventory(int inventory) {
         this.inventory = inventory;
     }
-    
-    
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
 }

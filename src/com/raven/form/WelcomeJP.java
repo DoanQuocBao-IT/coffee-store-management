@@ -1,20 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.raven.form;
 
 /**
  *
- * @author RAVEN
+ * @author doanq
  */
-public class Form_2 extends javax.swing.JPanel {
+public class WelcomeJP extends javax.swing.JPanel {
 
     /**
-     * Creates new form Form_1
+     * Creates new form WelcomeJP
      */
-    public Form_2() {
+    public WelcomeJP() {
         initComponents();
     }
 
@@ -29,12 +28,10 @@ public class Form_2 extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(242, 242, 242));
-
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(106, 106, 106));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Form 2");
+        jLabel1.setText("Form 3");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

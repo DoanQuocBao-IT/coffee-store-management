@@ -1,5 +1,6 @@
 package com.raven.form;
 
+import com.raven.main.ConnectMySQL;
 import com.raven.model.Model_Card;
 import com.raven.model.StatusType;
 import com.raven.swing.ScrollBar;
@@ -16,18 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
-public class DashboardJF extends javax.swing.JPanel {
+public class DashboardJP extends javax.swing.JPanel {
 
-    private static final String username = "root";
-    private static final String password = "";
-    private static final String dataConn = "jdbc:mysql://localhost:3306/coffee_store_management";
-    int q, i, id, deleteItem;
-
-    Connection sqlConn = null;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    public DashboardJF() {
+//    private static final String username = "root";
+//    private static final String password = "";
+//    private static final String dataConn = "jdbc:mysql://localhost:3306/coffee_store_management";
+//    int q, i, id, deleteItem;
+//
+//    Connection sqlConn = null;
+//    PreparedStatement pst = null;
+//    ResultSet rs = null;
+    public DashboardJP() {
         initComponents();
         card1.setData(new Model_Card(new ImageIcon(getClass().getResource("/com/raven/icon/stock.png")), "Stock Total", "$200000", "Increased by 60%"));
         card2.setData(new Model_Card(new ImageIcon(getClass().getResource("/com/raven/icon/profit.png")), "Total Profit", "$15000", "Increased by 25%"));
@@ -58,18 +58,17 @@ public class DashboardJF extends javax.swing.JPanel {
 
     public void updateDB() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            sqlConn = DriverManager.getConnection(dataConn, username, password);
-            pst = sqlConn.prepareStatement("select * from employee");
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement("select * from employee");
 
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
-            q = stData.getColumnCount();
+            int q = stData.getColumnCount();
             DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
             recordTable.setRowCount(0);
             while (rs.next()) {
                 Vector columnData = new Vector();
-                for (i = 1; i <= q; i++) {
+                for (int i = 1; i <= q; i++) {
 //                    table.addRow(new Object[]{rs.getString("id"), rs.getString("name"), rs.getString("phone"), rs.getString("gender"), rs.getString("user_type"), rs.getString("joind_at"), rs.getString("status").equals("active") ? StatusType.APPROVED : StatusType.PENDING});
                     columnData.add(rs.getString("id"));
                     columnData.add(rs.getString("name"));
@@ -81,6 +80,7 @@ public class DashboardJF extends javax.swing.JPanel {
                 }
                 recordTable.addRow(columnData);
             }
+            ConnectMySQL.closeConnection();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

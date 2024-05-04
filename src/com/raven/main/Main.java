@@ -6,10 +6,12 @@
 package com.raven.main;
 
 import com.raven.event.EventMenuSelected;
-import com.raven.form.Form_1;
-import com.raven.form.Form_2;
+import com.raven.form.OrderJP;
+import com.raven.form.ShiftJP;
 import com.raven.form.Form_3;
-import com.raven.form.DashboardJF;
+import com.raven.form.DashboardJP;
+import com.raven.form.LoginJF;
+import com.raven.form.WelcomeJP;
 import java.awt.Color;
 import javax.swing.JComponent;
 
@@ -22,35 +24,70 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    private DashboardJF home;
-    private Form_1 form1;
-    private Form_2 form2;
+    private WelcomeJP formWelcome;
+    private DashboardJP formDashboard;
+    private OrderJP formOrder;
+    private ShiftJP formShift;
     private Form_3 form3;
 
     public Main() {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
-        home = new DashboardJF();
-        form1 = new Form_1();
-        form2 = new Form_2();
+        formWelcome = new WelcomeJP();
+        formDashboard = new DashboardJP();
+        formOrder = new OrderJP();
+        formShift = new ShiftJP();
         form3 = new Form_3();
         menu.initMoving(Main.this);
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
-                if (index == 0) {
-                    setForm(home);
-                } else if (index == 1) {
-                    setForm(form1);
-                } else if (index == 2) {
-                    setForm(form2);
-                } else if (index == 3) {
-                    setForm(form3);
+                if (Session.isLoggedIn()) {
+                    switch (Session.getRole()) {
+                        case "Employee" -> {
+                            switch (index) {
+                                case 0 ->
+                                    setForm(formOrder);
+                                case 1 ->
+                                    setForm(formDashboard);
+                                case 2 ->
+                                    setForm(formShift);
+                                default -> {
+                                    // Xử lý trường hợp không khớp
+                                }
+                            }
+                        }
+                        case "Admin" -> {
+                            // Xử lý trường hợp là Admin
+                            switch (index) {
+                                case 0 ->
+                                    setForm(formDashboard);
+                                case 1 ->
+                                    setForm(form3);
+                                case 2 ->
+                                    setForm(form3);
+                                default -> {
+                                    // Xử lý trường hợp không khớp
+                                }
+                            }
+                        }
+                        default -> {
+                            // Xử lý trường hợp không khớp với Employee hoặc Admin
+                        }
+                    }
                 }
+
             }
         });
-        //  set when system open start with home form
-        setForm(new DashboardJF());
+        // Kiểm tra trạng thái đăng nhập khi ứng dụng khởi chạy
+        if (Session.isLoggedIn()) {
+            // Nếu đã đăng nhập, hiển thị Dashboard
+            setForm(formWelcome);
+        } else {
+            // Nếu chưa đăng nhập, hiển thị Form đăng nhập
+            dispose(); // Đóng form hiện tại
+            new LoginJF().setVisible(true); // Mở form đăng nhập
+        }
     }
 
     private void setForm(JComponent com) {
