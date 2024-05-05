@@ -6,11 +6,13 @@
 package com.raven.main;
 
 import com.raven.event.EventMenuSelected;
+import com.raven.form.BeverageJP;
 import com.raven.form.OrderJP;
 import com.raven.form.ShiftJP;
-import com.raven.form.Form_3;
+import com.raven.form.OrderManageJP;
 import com.raven.form.DashboardJP;
 import com.raven.form.LoginJF;
+import com.raven.form.VoucherJP;
 import com.raven.form.WelcomeJP;
 import java.awt.Color;
 import javax.swing.JComponent;
@@ -28,7 +30,9 @@ public class Main extends javax.swing.JFrame {
     private DashboardJP formDashboard;
     private OrderJP formOrder;
     private ShiftJP formShift;
-    private Form_3 form3;
+    private BeverageJP formBeverage;
+    private VoucherJP formVoucher;
+    private OrderManageJP formOrderManageJP;
 
     public Main() {
         initComponents();
@@ -37,7 +41,9 @@ public class Main extends javax.swing.JFrame {
         formDashboard = new DashboardJP();
         formOrder = new OrderJP();
         formShift = new ShiftJP();
-        form3 = new Form_3();
+        formBeverage = new BeverageJP();
+        formVoucher= new VoucherJP();
+        formOrderManageJP = new OrderManageJP();
         menu.initMoving(Main.this);
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
@@ -63,9 +69,17 @@ public class Main extends javax.swing.JFrame {
                                 case 0 ->
                                     setForm(formDashboard);
                                 case 1 ->
-                                    setForm(form3);
+                                    setForm(formOrderManageJP);
                                 case 2 ->
-                                    setForm(form3);
+                                    setForm(formBeverage);
+                                case 3 ->
+                                    setForm(formShift);
+                                case 4 ->
+                                    setForm(formVoucher);
+                                case 5 ->
+                                    setForm(formShift);
+                                case 6 ->
+                                    setForm(formShift);
                                 default -> {
                                     // Xử lý trường hợp không khớp
                                 }
