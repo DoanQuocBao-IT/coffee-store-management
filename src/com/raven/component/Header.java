@@ -1,5 +1,7 @@
 package com.raven.component;
 
+import com.raven.form.LoginJF;
+import com.raven.main.Session;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -106,6 +108,13 @@ public class Header extends javax.swing.JPanel {
             // Xử lý sự kiện khi click vào Logout
             // Ví dụ: thực hiện đăng xuất khỏi hệ thống
             // Thực hiện các hành động cần thiết khi đăng xuất
+            Session.setLoggedIn(false);
+            Session.setId(0);
+            Session.setName("");
+            Session.setRole("");
+            LoginJF LoginForm = new LoginJF();
+            LoginForm.setVisible(true);
+            this.setVisible(false);
         });
 
         // Thêm các JMenuItem vào menu

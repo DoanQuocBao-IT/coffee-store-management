@@ -3,14 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/WelcomeJP.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/entity/ShiftEmployee.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/main/ConnectMySQL.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/entity/Order.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/ShiftEmployeeJP.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/OrderManageJP.java</file>
             <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/main/Main.java</file>
             <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/component/Menu.java</file>
-            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/WelcomeJP.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/OrderJP.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/BeverageJP.java</file>
             <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/entity/Employee.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/LoginJP.java</file>
             <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/LoginJF.java</file>
-            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/main/ConnectMySQL.java</file>
-            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/Form_3.java</file>
-            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/DashboardJP.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/entity/Admin.java</file>
+            <file>file:/C:/Users/doanq/OneDrive/Documents/NetBeansProjects/CoffeeShopSystemManagement/coffee-store-management/src/com/raven/form/VoucherJP.java</file>
         </group>
     </open-files>
 </project-private>

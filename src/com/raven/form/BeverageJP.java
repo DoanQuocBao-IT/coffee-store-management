@@ -4,6 +4,15 @@
  */
 package com.raven.form;
 
+import com.raven.main.ConnectMySQL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author doanq
@@ -15,6 +24,7 @@ public class BeverageJP extends javax.swing.JPanel {
      */
     public BeverageJP() {
         initComponents();
+        updateDB();
     }
 
     /**
@@ -29,15 +39,21 @@ public class BeverageJP extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jTextFieldName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldName1 = new javax.swing.JTextField();
+        jTextSize = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldName2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jTextFieldPrice = new javax.swing.JTextField();
+        jButtonAddSize = new javax.swing.JButton();
         panelBorder2 = new com.raven.swing.PanelBorder();
         jLabel7 = new javax.swing.JLabel();
         spTable1 = new javax.swing.JScrollPane();
-        table1 = new com.raven.swing.Table();
-        jButton2 = new javax.swing.JButton();
+        tableBeverage = new com.raven.swing.Table();
+        jLabel5 = new javax.swing.JLabel();
+        jLabelId = new javax.swing.JLabel();
+        jButtonAdd = new javax.swing.JButton();
+        jButtonDelete = new javax.swing.JButton();
+        jButtonEdit = new javax.swing.JButton();
+        jButtonReset = new javax.swing.JButton();
+        jLabelSizeId = new javax.swing.JLabel();
 
         jLabel1.setText("Tên sản phẩm:");
 
@@ -45,7 +61,13 @@ public class BeverageJP extends javax.swing.JPanel {
 
         jLabel3.setText("Giá tiền:");
 
-        jButton1.setText("Thêm size");
+        jButtonAddSize.setBackground(new java.awt.Color(204, 255, 204));
+        jButtonAddSize.setText("Thêm size mới");
+        jButtonAddSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddSizeActionPerformed(evt);
+            }
+        });
 
         panelBorder2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -55,23 +77,28 @@ public class BeverageJP extends javax.swing.JPanel {
 
         spTable1.setBorder(null);
 
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        tableBeverage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Tên sản phẩm", "Loại (size)", "Giá tiền"
+                "Mã sản phẩm", "Tên sản phẩm", "Mã size", "Loại (size)", "Giá tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        spTable1.setViewportView(table1);
+        tableBeverage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableBeverageMouseClicked(evt);
+            }
+        });
+        spTable1.setViewportView(tableBeverage);
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
@@ -81,11 +108,11 @@ public class BeverageJP extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder2Layout.createSequentialGroup()
-                        .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(panelBorder2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addGap(0, 170, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelBorder2Layout.setVerticalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,82 +120,299 @@ public class BeverageJP extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                .addComponent(spTable1)
                 .addContainerGap())
         );
 
-        jButton2.setText("Thêm sản phẩm");
+        jLabel5.setText("Mã sản phẩm:");
+
+        jLabelId.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelId.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        jButtonAdd.setBackground(new java.awt.Color(102, 255, 102));
+        jButtonAdd.setText("Thêm sản phẩm");
+        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddActionPerformed(evt);
+            }
+        });
+
+        jButtonDelete.setBackground(new java.awt.Color(255, 102, 102));
+        jButtonDelete.setText("Xóa ca làm");
+        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeleteActionPerformed(evt);
+            }
+        });
+
+        jButtonEdit.setBackground(new java.awt.Color(255, 255, 153));
+        jButtonEdit.setText("Chỉnh sửa ca làm");
+        jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditActionPerformed(evt);
+            }
+        });
+
+        jButtonReset.setBackground(new java.awt.Color(242, 242, 242));
+        jButtonReset.setText("Reset");
+        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetActionPerformed(evt);
+            }
+        });
+
+        jLabelSizeId.setForeground(new java.awt.Color(242, 242, 242));
+        jLabelSizeId.setText("fdf");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldName2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                .addComponent(jTextFieldName1))
-                            .addGap(39, 39, 39)
-                            .addComponent(jButton1))
-                        .addComponent(jTextFieldName))
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonEdit)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonDelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonReset))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelId))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonAdd)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextFieldPrice)
+                                        .addComponent(jTextSize, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonAddSize))))
+                    .addComponent(jLabelSizeId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(55, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabelId))
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jTextFieldName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jTextFieldName2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addComponent(jButton1)))
-                        .addGap(92, 92, 92)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel2)
+                            .addComponent(jTextSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextFieldPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jButtonAddSize)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelSizeId)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
+        // TODO add your handling code here:
+        insertBeverage();
+        updateDB();
+    }//GEN-LAST:event_jButtonAddActionPerformed
 
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        // TODO add your handling code here:
+        deleteBeverage();
+        updateDB();
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
+
+    private void jButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditActionPerformed
+        // TODO add your handling code here:
+        editBeverage();
+        updateDB();
+    }//GEN-LAST:event_jButtonEditActionPerformed
+
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+        // TODO add your handling code here:
+        jLabelId.setText("");
+        jTextFieldName.setText("");
+        jTextSize.setText("");
+        jTextFieldPrice.setText("");
+    }//GEN-LAST:event_jButtonResetActionPerformed
+
+    private void jButtonAddSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddSizeActionPerformed
+        // TODO add your handling code here:
+        jTextSize.setText("");
+        jTextFieldPrice.setText("");
+    }//GEN-LAST:event_jButtonAddSizeActionPerformed
+
+    private void tableBeverageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableBeverageMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel recordTable = (DefaultTableModel) tableBeverage.getModel();
+        int selectionRow = tableBeverage.getSelectedRow();
+        jLabelId.setText(recordTable.getValueAt(selectionRow, 0).toString());
+        jTextFieldName.setText(recordTable.getValueAt(selectionRow, 1).toString());
+        jLabelSizeId.setText(recordTable.getValueAt(selectionRow, 2).toString());
+        jTextSize.setText(recordTable.getValueAt(selectionRow, 3).toString());
+        jTextFieldPrice.setText(recordTable.getValueAt(selectionRow, 4).toString());
+    }//GEN-LAST:event_tableBeverageMouseClicked
+public void editBeverage() {
+    try {
+        Connection sqlConn = ConnectMySQL.ConnectMySQL();
+        
+        // Cập nhật thông tin của sản phẩm trong bảng beverage
+        PreparedStatement pstBeverage = sqlConn.prepareStatement("UPDATE beverage SET name = ? WHERE id = ?");
+        pstBeverage.setString(1, jTextFieldName.getText());
+        pstBeverage.setInt(2, Integer.parseInt(jLabelId.getText()));
+        pstBeverage.executeUpdate();
+        
+        // Nếu bạn muốn cập nhật các thuộc tính của sản phẩm cũng, bạn có thể thêm mã sau vào đây
+
+        PreparedStatement pstProperties = sqlConn.prepareStatement("UPDATE properties SET size = ?, price = ? WHERE id = ?");
+        pstProperties.setString(1, jTextSize.getText());
+        pstProperties.setString(2, jTextFieldPrice.getText());
+        pstProperties.setInt(3, Integer.parseInt(jLabelSizeId.getText()));
+        pstProperties.executeUpdate();
+        JOptionPane.showMessageDialog(this, "Đã chỉnh sửa sản phẩm " + jTextFieldName.getText());
+        ConnectMySQL.closeConnection();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, ex);
+    }
+}
+
+    public void insertBeverage() {
+        try {
+            String msg = "Đã thêm một ";
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+
+            // Kiểm tra xem tên sản phẩm đã tồn tại trong cơ sở dữ liệu chưa
+            PreparedStatement pst1 = sqlConn.prepareStatement("SELECT * FROM beverage WHERE name = ?");
+            pst1.setString(1, jTextFieldName.getText());
+            ResultSet rs = pst1.executeQuery();
+
+            if (rs.next()) {
+                // Sản phẩm đã tồn tại, thêm thuộc tính mới cho sản phẩm
+                PreparedStatement pst2 = sqlConn.prepareStatement("INSERT INTO properties (size, price, beverage) VALUES (?, ?, ?)");
+                pst2.setString(1, jTextSize.getText());
+                pst2.setString(2, jTextFieldPrice.getText());
+                pst2.setInt(3, rs.getInt("id"));
+                pst2.executeUpdate();
+                msg += "loại sản phẩm mới";
+            } else {
+                // Sản phẩm chưa tồn tại, thêm sản phẩm mới và thuộc tính của nó
+                PreparedStatement pstNew = sqlConn.prepareStatement("INSERT INTO beverage (name) VALUES (?)");
+                pstNew.setString(1, jTextFieldName.getText());
+                pstNew.executeUpdate();
+                ResultSet generatedKeys = pstNew.getGeneratedKeys();
+                int newBeverageId = 0;
+                if (generatedKeys.next()) {
+                    newBeverageId = generatedKeys.getInt(1);
+                }
+                PreparedStatement pstNewP = sqlConn.prepareStatement("INSERT INTO properties (size, price, beverage) VALUES (?, ?, ?)");
+                pstNewP.setString(1, jTextSize.getText());
+                pstNewP.setString(2, jTextFieldPrice.getText());
+                pstNewP.setInt(3, newBeverageId);
+                pstNewP.executeUpdate();
+                msg += "sản phẩm và một loại sản phẩm mới";
+            }
+
+            JOptionPane.showMessageDialog(this, msg);
+            ConnectMySQL.closeConnection();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    public void updateDB() {
+        try {
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement("select b.id, b.name,p.size,p.price,p.id as size_id from beverage b join properties p where b.id=p.beverage");
+
+            ResultSet rs = pst.executeQuery();
+            ResultSetMetaData stData = rs.getMetaData();
+            int q = stData.getColumnCount();
+            DefaultTableModel recordTable = (DefaultTableModel) tableBeverage.getModel();
+            recordTable.setRowCount(0);
+            while (rs.next()) {
+                Vector columnData = new Vector();
+                for (int i = 1; i <= q; i++) {
+                    columnData.add(rs.getString("id"));
+                    columnData.add(rs.getString("name"));
+                    columnData.add(rs.getString("size_id"));
+                    columnData.add(rs.getString("size"));
+                    columnData.add(rs.getString("price"));
+                }
+                recordTable.addRow(columnData);
+            }
+            ConnectMySQL.closeConnection();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    public void deleteBeverage() {
+        try {
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement("delete from shift where id = ?");
+            pst.setInt(1, Integer.parseInt(jLabelId.getText()));
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Đã xóa một ca làm " + jTextFieldName.getText());
+            ConnectMySQL.closeConnection();
+            jLabelId.setText("");
+            jTextFieldName.setText("");
+            jTextSize.setText("");
+            jTextFieldPrice.setText("");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonAdd;
+    private javax.swing.JButton jButtonAddSize;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonEdit;
+    private javax.swing.JButton jButtonReset;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelId;
+    private javax.swing.JLabel jLabelSizeId;
     private javax.swing.JTextField jTextFieldName;
-    private javax.swing.JTextField jTextFieldName1;
-    private javax.swing.JTextField jTextFieldName2;
+    private javax.swing.JTextField jTextFieldPrice;
+    private javax.swing.JTextField jTextSize;
     private com.raven.swing.PanelBorder panelBorder2;
     private javax.swing.JScrollPane spTable1;
-    private com.raven.swing.Table table1;
+    private com.raven.swing.Table tableBeverage;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,6 +12,7 @@ import com.raven.form.ShiftJP;
 import com.raven.form.OrderManageJP;
 import com.raven.form.DashboardJP;
 import com.raven.form.LoginJF;
+import com.raven.form.ShiftEmployeeJP;
 import com.raven.form.VoucherJP;
 import com.raven.form.WelcomeJP;
 import java.awt.Color;
@@ -30,6 +31,7 @@ public class Main extends javax.swing.JFrame {
     private DashboardJP formDashboard;
     private OrderJP formOrder;
     private ShiftJP formShift;
+    private ShiftEmployeeJP formShiftEmployee;
     private BeverageJP formBeverage;
     private VoucherJP formVoucher;
     private OrderManageJP formOrderManageJP;
@@ -41,8 +43,9 @@ public class Main extends javax.swing.JFrame {
         formDashboard = new DashboardJP();
         formOrder = new OrderJP();
         formShift = new ShiftJP();
+        formShiftEmployee = new ShiftEmployeeJP();
         formBeverage = new BeverageJP();
-        formVoucher= new VoucherJP();
+        formVoucher = new VoucherJP();
         formOrderManageJP = new OrderManageJP();
         menu.initMoving(Main.this);
         menu.addEventMenuSelected(new EventMenuSelected() {
@@ -57,7 +60,20 @@ public class Main extends javax.swing.JFrame {
                                 case 1 ->
                                     setForm(formDashboard);
                                 case 2 ->
-                                    setForm(formShift);
+                                    setForm(formShiftEmployee);
+                                case 3 ->
+                                    setForm(formShiftEmployee);
+                                case 5 ->
+                                    setForm(formShiftEmployee);
+                                case 6 -> {
+                                    Session.setLoggedIn(false);
+                                    Session.setId(0);
+                                    Session.setName("");
+                                    Session.setRole("");
+                                    LoginJF LoginForm = new LoginJF();
+                                    LoginForm.setVisible(true);
+                                    Main.this.setVisible(false);
+                                }
                                 default -> {
                                     // Xử lý trường hợp không khớp
                                 }
