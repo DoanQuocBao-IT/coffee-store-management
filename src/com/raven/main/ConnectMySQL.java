@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class ConnectMySQL {
 
     private static final String username = "root";
-    private static final String password = "";
+    private static final String password = "123456789";
     private static final String dataConn = "jdbc:mysql://localhost:3306/coffee_store_management";
 
     private static Connection sqlConn = null;
