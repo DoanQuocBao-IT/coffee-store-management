@@ -5,17 +5,41 @@
  */
 package com.raven.form;
 
+import com.raven.entity.request.ComboboxDisplay;
+import com.raven.entity.request.OrderItemRequest;
+import com.raven.entity.request.OrderRequest;
+import com.raven.main.ConnectMySQL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import com.raven.main.Session;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author RAVEN
  */
 public class OrderJP extends javax.swing.JPanel {
 
+    private int voucherDiscount = 0;
+
     /**
      * Creates new form Form_1
      */
     public OrderJP() {
         initComponents();
+        updateDB();
+        getVoucher();
+
     }
 
     /**
@@ -39,29 +63,64 @@ public class OrderJP extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         spTable = new javax.swing.JScrollPane();
         table = new com.raven.swing.Table();
+        spTable1 = new javax.swing.JScrollPane();
+        tbl_sp = new com.raven.swing.Table();
+        jLabel2 = new javax.swing.JLabel();
+        jComboboxVoucher = new javax.swing.JComboBox<>();
 
         jLabel3.setText("Tổng tiền (VND):");
 
         jLabel5.setText("Tiền nhận (VND):");
 
         jLabelTotal.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabelTotal.setText("5600000");
+        jLabelTotal.setText("0");
 
         jLabelChange.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabelChange.setText("5600000");
+        jLabelChange.setText("0");
 
         jLabel8.setText("Tiền trả lại (VND):");
 
+        jTextFieldAmount.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldAmountFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldAmountFocusLost(evt);
+            }
+        });
+        jTextFieldAmount.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jTextFieldAmountInputMethodTextChanged(evt);
+            }
+        });
+        jTextFieldAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldAmountActionPerformed(evt);
+            }
+        });
+
         jButtonCancel.setText("Hủy đặt ");
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelActionPerformed(evt);
+            }
+        });
 
         jButtonReceipt.setText("Thanh toàn");
         jButtonReceipt.setActionCommand("Thanh toán");
+        jButtonReceipt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReceiptActionPerformed(evt);
+            }
+        });
 
         panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(127, 127, 127));
-        jLabel1.setText("Danh sách các sản phẩm");
+        jLabel1.setText("Danh sách sản phẩm được chọn");
 
         spTable.setBorder(null);
 
@@ -70,15 +129,28 @@ public class OrderJP extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Tên sản phẩm", "Size", "Số lượng", "Giá"
+                "Mã sản phẩm", "Tên sản phẩm", "Size", "Số lượng", "Giá"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                true, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        table.setName("tbl_order"); // NOI18N
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
+        table.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                tableInputMethodTextChanged(evt);
             }
         });
         spTable.setViewportView(table);
@@ -90,7 +162,7 @@ public class OrderJP extends javax.swing.JPanel {
             .addGroup(panelBorder1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel1)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelBorder1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -106,57 +178,108 @@ public class OrderJP extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        spTable1.setBorder(null);
+
+        tbl_sp.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Mã sản phẩm", "Tên sản phẩm", "Size", "Giá"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbl_sp.setName("tbl_order"); // NOI18N
+        tbl_sp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_spMouseClicked(evt);
+            }
+        });
+        spTable1.setViewportView(tbl_sp);
+
+        jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(127, 127, 127));
+        jLabel2.setText("Danh sách sản phẩm");
+
+        jComboboxVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboboxVoucher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboboxVoucherActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(637, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel8))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabelChange))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jTextFieldAmount))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jLabelTotal))))
-                        .addGap(116, 116, 116))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelChange)
+                                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelTotal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(53, 53, 53))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
                                 .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonReceipt))
-                            .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(275, 275, 275)
+                                .addComponent(jButtonReceipt)))
                         .addGap(15, 15, 15))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelTotal)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jLabelChange))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -164,11 +287,269 @@ public class OrderJP extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReceiptActionPerformed
+
+        OrderRequest order = new OrderRequest(Integer.parseInt(jLabelTotal.getText().toString()), Session.getId(), 1);
+        int idOrder = 0;
+        if (createOrder(order)) {
+            idOrder = getLatestIdOrder();
+        }
+        if (idOrder != 0) {
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            int rowCount = model.getRowCount();
+            for (int row = 0; row < rowCount; row++) {
+                int beverage = Integer.parseInt((String) model.getValueAt(row, 0).toString());
+                int inventory = Integer.parseInt((String) model.getValueAt(row, 3).toString());
+                OrderItemRequest item = new OrderItemRequest(inventory, beverage, idOrder);
+                createOrderItem(item);
+            }
+        }
+        ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
+        updateInventoryVoucher(item.getId());
+        JOptionPane.showMessageDialog(panelBorder1, "Gọi món thành công");
+    }//GEN-LAST:event_jButtonReceiptActionPerformed
+    private boolean updateInventoryVoucher(int id) {
+        Connection sqlConn = ConnectMySQL.ConnectMySQL();
+        try {
+            PreparedStatement pst = sqlConn.prepareStatement("UPDATE voucher \n"
+                    + "SET inventory = (SELECT inventory - 1 FROM (SELECT inventory FROM voucher WHERE id = ?) AS subquery)\n"
+                    + "WHERE id = ?;");
+            pst.setInt(1, id);
+            pst.setInt(2, id);
+
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderJP.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        ConnectMySQL.closeConnection();
+        return true;
+    }
+
+    private boolean createOrderItem(OrderItemRequest order) {
+        Connection sqlConn = ConnectMySQL.ConnectMySQL();
+        try {
+            PreparedStatement pst = sqlConn.prepareStatement("insert into order_item(inventory,beverage,orders)value(?,?,?)");
+            pst.setInt(1, order.getInventory());
+            pst.setInt(2, order.getBeverage());
+            pst.setInt(3, order.getOrders());
+            pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderJP.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        ConnectMySQL.closeConnection();
+        return true;
+    }
+
+    private int getLatestIdOrder() {
+        int value = 0;
+        Connection sqlConn = ConnectMySQL.ConnectMySQL();
+        try {
+
+            PreparedStatement pst = sqlConn.prepareStatement("select max(id)  from orders");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                value = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderJP.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+        ConnectMySQL.closeConnection();
+        return value;
+    }
+
+    private boolean createOrder(OrderRequest order) {
+        System.out.print(order.getPayment());
+        Connection sqlConn = ConnectMySQL.ConnectMySQL();
+        try {
+            PreparedStatement pst = sqlConn.prepareStatement("insert into orders(payment,created_at,employee,voucher)value(?,?,?,?)");
+            pst.setInt(1, order.getPayment());
+            pst.setDate(2, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+            pst.setInt(3, order.getEmployeeId());
+            pst.setInt(4, order.getVoucherId());
+            pst.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderJP.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        ConnectMySQL.closeConnection();
+        return true;
+    }
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void tbl_spMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_spMouseClicked
+        JTable source = (JTable) evt.getSource();
+        int row = source.rowAtPoint(evt.getPoint());
+        int column = source.columnAtPoint(evt.getPoint());
+        String name = source.getModel().getValueAt(row, 1) + "";
+        String size = source.getModel().getValueAt(row, 2) + "";
+
+//            JOptionPane.showMessageDialog(null, s);
+        int dialogButton = JOptionPane.showConfirmDialog(null, "Bạn có muốn thêm " + name + "size " + size + " vào giỏ hàng", "WARNING", JOptionPane.YES_NO_OPTION);
+        if (dialogButton == JOptionPane.YES_OPTION) {
+//                System.out.print(s);
+            DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
+            Vector columnData = new Vector();
+            columnData.add(source.getModel().getValueAt(row, 0));
+            if (findProduct(Integer.parseInt(source.getModel().getValueAt(row, 0).toString()))) {
+                JOptionPane.showMessageDialog(panelBorder1, "Sản phẩm đã có trong giỏ hàng");
+                return;
+            }
+            columnData.add(source.getModel().getValueAt(row, 1));
+            columnData.add(source.getModel().getValueAt(row, 2));
+//                    columnData.add(rs.getString("size_id"));
+            columnData.add(1);
+            columnData.add(source.getModel().getValueAt(row, 3));
+
+            recordTable.addRow(columnData);
+            updateTotalPrice();
+        } else {
+            remove(dialogButton);
+        }
+
+    }//GEN-LAST:event_tbl_spMouseClicked
+    private boolean findProduct(int id) {
+        DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
+        int rowCount = recordTable.getRowCount();
+        for (int row1 = 0; row1 < rowCount; row1++) {
+            if (id == Integer.parseInt(recordTable.getValueAt(row1, 0).toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        JTable source = (JTable) evt.getSource();
+        int row = source.rowAtPoint(evt.getPoint());
+        int quantity = (int) source.getModel().getValueAt(row, 3);
+        int totalPrice = Integer.parseInt((String) source.getModel().getValueAt(row, 4).toString());
+        int price = totalPrice / quantity;
+        String input = (String) JOptionPane.showInputDialog(null, "Cập nhật số lượng",
+                "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE, null, null, quantity);
+        if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > 20) {
+            JOptionPane.showMessageDialog(panelBorder1, "Vui lòng chọn số lượng nằm trong khoảng 0 đến 20");
+            return;
+        } else if (Integer.parseInt(input) == 0) {
+            DefaultTableModel model = (DefaultTableModel) source.getModel();
+            model.removeRow(row);
+        } else if (Integer.parseInt(input) != quantity) {
+
+            source.getModel().setValueAt(Integer.parseInt(input), row, 3);
+            source.getModel().setValueAt(Integer.parseInt(input) * price, row, 4);
+//              source.getModel().setValueAt(quantity*price, row, 3);
+        }
+        updateTotalPrice();
+
+    }//GEN-LAST:event_tableMouseClicked
+    private void updateTotalPrice() {
+        DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
+        int rowCount = recordTable.getRowCount();
+        int sumPrice = 0;
+        for (int row1 = 0; row1 < rowCount; row1++) {
+            sumPrice += Integer.parseInt((String) recordTable.getValueAt(row1, 4).toString());
+        }
+        jLabelTotal.setText(String.valueOf(sumPrice - (sumPrice * voucherDiscount) / 100));
+    }
+    private void tableInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tableInputMethodTextChanged
+
+    }//GEN-LAST:event_tableInputMethodTextChanged
+
+    private void jComboboxVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboboxVoucherActionPerformed
+
+        ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
+        voucherDiscount = item.getValue();
+        updateTotalPrice();
+    }//GEN-LAST:event_jComboboxVoucherActionPerformed
+
+    private void jTextFieldAmountInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextFieldAmountInputMethodTextChanged
+     
+    }//GEN-LAST:event_jTextFieldAmountInputMethodTextChanged
+
+    private void jTextFieldAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAmountActionPerformed
+       
+    }//GEN-LAST:event_jTextFieldAmountActionPerformed
+
+    private void jTextFieldAmountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldAmountFocusLost
+//    int value = Integer.parseInt(jTextFieldAmount.getText().toString());
+    try{
+          int value = Integer.parseInt(jTextFieldAmount.getText().toString());
+          if(value <0)
+          {
+               JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên dương");
+               return;
+          }
+             jLabelChange.setText( String.valueOf(value -Integer.parseInt(jLabelTotal.getText().toString()) ));
+    }catch(Exception ex)
+    {
+        JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên");
+    }
+    }//GEN-LAST:event_jTextFieldAmountFocusLost
+
+    private void jTextFieldAmountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldAmountFocusGained
+  
+   
+    }//GEN-LAST:event_jTextFieldAmountFocusGained
+    public void updateDB() {
+        try {
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement("select b.id, b.name,p.size,p.price,p.id as size_id from beverage b join properties p where b.id=p.beverage");
+
+            ResultSet rs = pst.executeQuery();
+            ResultSetMetaData stData = rs.getMetaData();
+            int q = stData.getColumnCount();
+            DefaultTableModel recordTable = (DefaultTableModel) tbl_sp.getModel();
+            recordTable.setRowCount(0);
+            while (rs.next()) {
+                Vector columnData = new Vector();
+                for (int i = 1; i <= q; i++) {
+                    columnData.add(rs.getString("size_id"));
+                    columnData.add(rs.getString("name"));
+//                    columnData.add(rs.getString("size_id"));
+                    columnData.add(rs.getString("size"));
+                    columnData.add(rs.getString("price"));
+                }
+                recordTable.addRow(columnData);
+            }
+            ConnectMySQL.closeConnection();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    public void getVoucher() {
+        try {
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement("select * from voucher \n"
+                    + "where NOW() between start_at and finish_at and inventory>0");
+
+            ResultSet rs = pst.executeQuery();
+            DefaultComboBoxModel combo = new DefaultComboBoxModel();
+            while (rs.next()) {
+                combo.addElement(new ComboboxDisplay(rs.getInt(1), rs.getInt(4), rs.getString(2)));
+            }
+            jComboboxVoucher.setModel(combo);
+            ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
+            voucherDiscount = item.getValue();
+
+            ConnectMySQL.closeConnection();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonReceipt;
+    private javax.swing.JComboBox<String> jComboboxVoucher;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
@@ -177,6 +558,8 @@ public class OrderJP extends javax.swing.JPanel {
     private javax.swing.JTextField jTextFieldAmount;
     private com.raven.swing.PanelBorder panelBorder1;
     private javax.swing.JScrollPane spTable;
+    private javax.swing.JScrollPane spTable1;
     private com.raven.swing.Table table;
+    private com.raven.swing.Table tbl_sp;
     // End of variables declaration//GEN-END:variables
 }

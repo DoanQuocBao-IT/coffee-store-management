@@ -152,7 +152,7 @@ public class DashboardJP extends javax.swing.JPanel {
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 646, Short.MAX_VALUE))
                     .addComponent(spTable))
                 .addContainerGap())
         );

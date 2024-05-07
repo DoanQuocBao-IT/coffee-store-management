@@ -138,7 +138,7 @@ public class BeverageJP extends javax.swing.JPanel {
         });
 
         jButtonDelete.setBackground(new java.awt.Color(255, 102, 102));
-        jButtonDelete.setText("Xóa ca làm");
+        jButtonDelete.setText("Xóa sản phẩm");
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteActionPerformed(evt);
@@ -146,7 +146,7 @@ public class BeverageJP extends javax.swing.JPanel {
         });
 
         jButtonEdit.setBackground(new java.awt.Color(255, 255, 153));
-        jButtonEdit.setText("Chỉnh sửa ca làm");
+        jButtonEdit.setText("Chỉnh sửa sản phẩm");
         jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditActionPerformed(evt);
