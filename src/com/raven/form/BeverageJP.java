@@ -162,7 +162,6 @@ public class BeverageJP extends javax.swing.JPanel {
         });
 
         jLabelSizeId.setForeground(new java.awt.Color(242, 242, 242));
-        jLabelSizeId.setText("fdf");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -205,7 +204,7 @@ public class BeverageJP extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
+                .addContainerGap(63, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabelId))
@@ -228,7 +227,7 @@ public class BeverageJP extends javax.swing.JPanel {
                         .addComponent(jButtonAddSize)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabelSizeId)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
                 .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -263,10 +262,12 @@ public class BeverageJP extends javax.swing.JPanel {
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         // TODO add your handling code here:
-        jLabelId.setText("");
-        jTextFieldName.setText("");
-        jTextSize.setText("");
-        jTextFieldPrice.setText("");
+        updateDB();
+        jLabelId.setText(null);
+        jLabelSizeId.setText(null);
+        jTextFieldName.setText(null);
+        jTextSize.setText(null);
+        jTextFieldPrice.setText(null);
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonAddSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddSizeActionPerformed
@@ -344,9 +345,8 @@ public void editBeverage() {
                 pstNewP.executeUpdate();
                 msg += "sản phẩm và một loại sản phẩm mới";
             }
-
-            JOptionPane.showMessageDialog(this, msg);
             ConnectMySQL.closeConnection();
+            JOptionPane.showMessageDialog(this, msg);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

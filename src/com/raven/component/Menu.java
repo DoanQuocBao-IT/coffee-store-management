@@ -40,7 +40,9 @@ public class Menu extends javax.swing.JPanel {
             listMenu1.addItem(new Model_Menu("", "Thông tin của tôi", Model_Menu.MenuType.TITLE));
             listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
             listMenu1.addItem(new Model_Menu("3", "Lịch làm việc", Model_Menu.MenuType.MENU));
-            listMenu1.addItem(new Model_Menu("4", "Đăng xuất", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("4", "Thay đổi mật khẩu", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("5", "Đăng xuất", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
 
         } else if (Session.isLoggedIn() && Session.getRole().equals("Admin")) {
 
@@ -53,10 +55,10 @@ public class Menu extends javax.swing.JPanel {
 
             listMenu1.addItem(new Model_Menu("", "Thông tin cá nhân", Model_Menu.MenuType.TITLE));
             listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
-            listMenu1.addItem(new Model_Menu("6", "Icons", Model_Menu.MenuType.MENU));
-            listMenu1.addItem(new Model_Menu("7", "Sample Page", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("6", "Quản lý nhân viên", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("7", "Quản lý lương", Model_Menu.MenuType.MENU));
             listMenu1.addItem(new Model_Menu("8", "Extra", Model_Menu.MenuType.MENU));
-            listMenu1.addItem(new Model_Menu("9", "More", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("9", "Thay đổi mật khẩu", Model_Menu.MenuType.MENU));
             listMenu1.addItem(new Model_Menu("10", "Đăng xuất", Model_Menu.MenuType.MENU));
             listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
         }

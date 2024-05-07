@@ -19,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.raven.main.Session;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ import javax.swing.DefaultComboBoxModel;
 public class OrderJP extends javax.swing.JPanel {
 
     private int voucherDiscount = 0;
+    DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
     /**
      * Creates new form Form_1
@@ -67,6 +69,11 @@ public class OrderJP extends javax.swing.JPanel {
         tbl_sp = new com.raven.swing.Table();
         jLabel2 = new javax.swing.JLabel();
         jComboboxVoucher = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabelPercent = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabelTotalBill = new javax.swing.JLabel();
 
         jLabel3.setText("Tổng tiền (VND):");
 
@@ -75,15 +82,13 @@ public class OrderJP extends javax.swing.JPanel {
         jLabelTotal.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabelTotal.setText("0");
 
-        jLabelChange.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabelChange.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabelChange.setText("0");
 
         jLabel8.setText("Tiền trả lại (VND):");
 
+        jTextFieldAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextFieldAmount.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextFieldAmountFocusGained(evt);
-            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldAmountFocusLost(evt);
             }
@@ -101,6 +106,8 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
 
+        jButtonCancel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonCancel.setForeground(new java.awt.Color(255, 0, 51));
         jButtonCancel.setText("Hủy đặt ");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,8 +115,9 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
 
-        jButtonReceipt.setText("Thanh toàn");
-        jButtonReceipt.setActionCommand("Thanh toán");
+        jButtonReceipt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonReceipt.setForeground(new java.awt.Color(51, 255, 51));
+        jButtonReceipt.setText("Thanh toán");
         jButtonReceipt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonReceiptActionPerformed(evt);
@@ -197,6 +205,7 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
         tbl_sp.setName("tbl_order"); // NOI18N
+        tbl_sp.setShowGrid(false);
         tbl_sp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbl_spMouseClicked(evt);
@@ -215,81 +224,116 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setText("Chọn mã giảm giá:");
+
+        jLabel6.setText("Khuyến mãi nhận được (%):");
+
+        jLabelPercent.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabelPercent.setText("0");
+
+        jLabel7.setText("Thanh toán sau khi khuyến mãi (VND):");
+
+        jLabelTotalBill.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabelTotalBill.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
                         .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelBorder1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel8))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(275, 275, 275)
+                        .addComponent(jButtonReceipt))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelTotal))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelTotalBill, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel8))
+                                .addGap(30, 30, 30)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabelChange)
-                                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jTextFieldAmount)))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelTotal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(53, 53, 53))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(275, 275, 275)
-                                .addComponent(jButtonReceipt)))
-                        .addGap(15, 15, 15))))
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelPercent)))))
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabelTotal)
+                                    .addComponent(jLabel3))
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabelPercent))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabelTotalBill)
+                                .addGap(57, 57, 57))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabelChange))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButtonReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                            .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelTotal)
-                    .addComponent(jLabel3)
-                    .addComponent(jComboboxVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabelChange))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(10, 10, 10))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReceiptActionPerformed
-
-        OrderRequest order = new OrderRequest(Integer.parseInt(jLabelTotal.getText().toString()), Session.getId(), 1);
+        String totalBillText = jLabelTotalBill.getText().replaceAll(",", "");
+        OrderRequest order = new OrderRequest(Integer.parseInt(totalBillText), Session.getId());
         int idOrder = 0;
         if (createOrder(order)) {
             idOrder = getLatestIdOrder();
@@ -304,9 +348,13 @@ public class OrderJP extends javax.swing.JPanel {
                 createOrderItem(item);
             }
         }
-        ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
-        updateInventoryVoucher(item.getId());
+
         JOptionPane.showMessageDialog(panelBorder1, "Gọi món thành công");
+        DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
+        recordTable.setRowCount(0); // Xóa tất cả các hàng trong bảng
+        updateTotalPrice(); // Cập nhật tổng giá sau khi xóa
+        jLabelChange.setText(null);
+        jTextFieldAmount.setText(null);
     }//GEN-LAST:event_jButtonReceiptActionPerformed
     private boolean updateInventoryVoucher(int id) {
         Connection sqlConn = ConnectMySQL.ConnectMySQL();
@@ -362,16 +410,22 @@ public class OrderJP extends javax.swing.JPanel {
     }
 
     private boolean createOrder(OrderRequest order) {
-        System.out.print(order.getPayment());
+        ComboboxDisplay itemSelected = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
+
         Connection sqlConn = ConnectMySQL.ConnectMySQL();
         try {
             PreparedStatement pst = sqlConn.prepareStatement("insert into orders(payment,created_at,employee,voucher)value(?,?,?,?)");
             pst.setInt(1, order.getPayment());
             pst.setDate(2, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
             pst.setInt(3, order.getEmployeeId());
-            pst.setInt(4, order.getVoucherId());
-            pst.execute();
 
+            if (itemSelected != null) {
+                pst.setInt(4, itemSelected.getId());
+            } else {
+                pst.setNull(4, java.sql.Types.INTEGER);
+            }
+
+            pst.execute();
         } catch (SQLException ex) {
             Logger.getLogger(OrderJP.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -381,6 +435,15 @@ public class OrderJP extends javax.swing.JPanel {
     }
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         // TODO add your handling code here:
+        // Hỏi xác nhận trước khi xóa dữ liệu
+        int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa tất cả dữ liệu trong bảng?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            DefaultTableModel recordTable = (DefaultTableModel) table.getModel();
+            recordTable.setRowCount(0); // Xóa tất cả các hàng trong bảng
+            updateTotalPrice(); // Cập nhật tổng giá sau khi xóa
+            jLabelChange.setText(null);
+            jTextFieldAmount.setText(null);
+        }
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void tbl_spMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_spMouseClicked
@@ -454,47 +517,60 @@ public class OrderJP extends javax.swing.JPanel {
         for (int row1 = 0; row1 < rowCount; row1++) {
             sumPrice += Integer.parseInt((String) recordTable.getValueAt(row1, 4).toString());
         }
-        jLabelTotal.setText(String.valueOf(sumPrice - (sumPrice * voucherDiscount) / 100));
+        jLabelPercent.setText(String.valueOf(voucherDiscount));
+        jLabelTotal.setText(String.valueOf(decimalFormat.format(sumPrice)));
+        jLabelTotalBill.setText(String.valueOf(decimalFormat.format(sumPrice - (sumPrice * voucherDiscount) / 100)));
     }
     private void tableInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tableInputMethodTextChanged
 
     }//GEN-LAST:event_tableInputMethodTextChanged
 
     private void jComboboxVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboboxVoucherActionPerformed
-
         ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
-        voucherDiscount = item.getValue();
+        // Kiểm tra nếu item là null thì gán voucherDiscount thành 0
+        if (item == null) {
+            voucherDiscount = 0;
+        } else {
+            voucherDiscount = item.getValue();
+        }
         updateTotalPrice();
+        calculateChange();
     }//GEN-LAST:event_jComboboxVoucherActionPerformed
 
     private void jTextFieldAmountInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextFieldAmountInputMethodTextChanged
-     
+
     }//GEN-LAST:event_jTextFieldAmountInputMethodTextChanged
 
     private void jTextFieldAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAmountActionPerformed
-       
+        calculateChange();
     }//GEN-LAST:event_jTextFieldAmountActionPerformed
 
     private void jTextFieldAmountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldAmountFocusLost
-//    int value = Integer.parseInt(jTextFieldAmount.getText().toString());
-    try{
-          int value = Integer.parseInt(jTextFieldAmount.getText().toString());
-          if(value <0)
-          {
-               JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên dương");
-               return;
-          }
-             jLabelChange.setText( String.valueOf(value -Integer.parseInt(jLabelTotal.getText().toString()) ));
-    }catch(Exception ex)
-    {
-        JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên");
-    }
     }//GEN-LAST:event_jTextFieldAmountFocusLost
+    private void calculateChange() {
+        try {
+            int value = Integer.parseInt(jTextFieldAmount.getText());
+            if (value < 0) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên dương");
+                return;
+            }
+            int totalBill = 0;
+            String totalBillText = jLabelTotalBill.getText().replaceAll(",", ""); // Loại bỏ dấu phân cách hàng nghìn
+            if (!totalBillText.isEmpty()) {
+                totalBill = Integer.parseInt(totalBillText);
+            } else {
+                // Xử lý trường hợp chuỗi rỗng
+                JOptionPane.showMessageDialog(null, "Lỗi: Giá trị hóa đơn không hợp lệ");
+                return;
+            }
 
-    private void jTextFieldAmountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldAmountFocusGained
-  
-   
-    }//GEN-LAST:event_jTextFieldAmountFocusGained
+            int change = value - totalBill;
+            jLabelChange.setText(decimalFormat.format(change));
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên");
+        }
+    }
+
     public void updateDB() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
@@ -535,7 +611,12 @@ public class OrderJP extends javax.swing.JPanel {
             }
             jComboboxVoucher.setModel(combo);
             ComboboxDisplay item = (ComboboxDisplay) jComboboxVoucher.getSelectedItem();
-            voucherDiscount = item.getValue();
+            // Kiểm tra nếu item là null thì gán voucherDiscount thành 0
+            if (item == null) {
+                voucherDiscount = 0;
+            } else {
+                voucherDiscount = item.getValue();
+            }
 
             ConnectMySQL.closeConnection();
 
@@ -551,10 +632,15 @@ public class OrderJP extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelChange;
+    private javax.swing.JLabel jLabelPercent;
     private javax.swing.JLabel jLabelTotal;
+    private javax.swing.JLabel jLabelTotalBill;
     private javax.swing.JTextField jTextFieldAmount;
     private com.raven.swing.PanelBorder panelBorder1;
     private javax.swing.JScrollPane spTable;

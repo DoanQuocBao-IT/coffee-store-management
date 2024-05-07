@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -26,7 +28,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 
 /**
  *
@@ -146,65 +147,67 @@ public class OrderManageJP extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        try{
+        try {
             JFileChooser jFileChooser = new JFileChooser();
+            // Tạo định dạng ngày
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String currentDate = dateFormat.format(new Date());
+            // Thêm ngày hiện tại vào tên file
+            String fileName = "Orders_" + currentDate + ".xls";
+            jFileChooser.setSelectedFile(new File(fileName));
             jFileChooser.showSaveDialog(this);
             File saveFile = jFileChooser.getSelectedFile();
-            if (saveFile !=null){
-                saveFile = new File(saveFile.toString()+ ".xls");
+            if (saveFile != null) {
                 Workbook wb = new HSSFWorkbook();
                 Sheet sheet = wb.createSheet("Orders");
-                
                 Row rowCol = sheet.createRow(0);
-                
-                for (int i = 0; i< tableOrder.getColumnCount(); i++){
+                for (int i = 0; i < tableOrder.getColumnCount(); i++) {
                     Cell cell = rowCol.createCell(i);
                     cell.setCellValue(tableOrder.getColumnName(i));
                 }
-                
-                for (int i = 0; i< tableOrder.getRowCount(); i++){
+                for (int i = 0; i < tableOrder.getRowCount(); i++) {
                     Row row = sheet.createRow(i);
-                    for (int j = 0; j < tableOrder.getColumnCount(); j++){
+                    for (int j = 0; j < tableOrder.getColumnCount(); j++) {
                         Cell cell = row.createCell(j);
-                        if (tableOrder.getValueAt(i, j).toString()!= null)
+                        if (tableOrder.getValueAt(i, j).toString() != null) {
                             cell.setCellValue(tableOrder.getValueAt(i, j).toString());
+                        }
                     }
                 }
-                
                 FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
                 wb.write(out);
                 wb.close();
                 out.close();
                 openFile(saveFile.toString());
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Export Err");
             }
+        } catch (IOException ex) {
+
         }
-        catch(IOException ex){
-        
-        }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void updateTable(){
+    private void updateTable() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
             PreparedStatement pst = sqlConn.prepareStatement(
-                    "SELECT \n" +
-                    "    orders.id AS id,\n" +
-                    "    employee.name AS employee,\n" +
-                    "    created_at,\n" +
-                    "    voucher,\n" +
-                    "    payment\n" +
-                    "FROM\n" +
-                    "    orders\n" +
-                    "        LEFT JOIN\n" +
-                    "    employee ON orders.employee = employee.id");
+                    "SELECT \n"
+                    + "    orders.id AS id,\n"
+                    + "    employee.name AS employee,\n"
+                    + "    orders.created_at AS created_at,\n"
+                    + "    voucher.code AS voucher,\n"
+                    + "    orders.payment AS payment\n"
+                    + "FROM\n"
+                    + "    orders\n"
+                    + "LEFT JOIN\n"
+                    + "    employee ON orders.employee = employee.id\n"
+                    + "LEFT JOIN\n"
+                    + "    voucher ON orders.voucher = voucher.id;");
             ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
             int q = stData.getColumnCount();
-        DefaultTableModel recordTable = (DefaultTableModel) tableOrder.getModel();
+            DefaultTableModel recordTable = (DefaultTableModel) tableOrder.getModel();
             recordTable.setRowCount(0);
             while (rs.next()) {
                 Vector columnData = new Vector();
@@ -221,13 +224,12 @@ public class OrderManageJP extends javax.swing.JPanel {
         } catch (Exception ex) {
         }
     }
-    
-    private void openFile(String file){
-        try{
+
+    private void openFile(String file) {
+        try {
             File path = new File(file);
             Desktop.getDesktop().open(path);
-        }
-        catch(IOException ex ){
+        } catch (IOException ex) {
             System.out.print(ex);
         }
     }

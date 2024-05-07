@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Window;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -112,9 +113,13 @@ public class Header extends javax.swing.JPanel {
             Session.setId(0);
             Session.setName("");
             Session.setRole("");
+            // Đóng form hiện tại
+            Window window = SwingUtilities.getWindowAncestor(this);
+            window.dispose();
+
+            // Hiển thị form đăng nhập
             LoginJF LoginForm = new LoginJF();
             LoginForm.setVisible(true);
-            this.setVisible(false);
         });
 
         // Thêm các JMenuItem vào menu

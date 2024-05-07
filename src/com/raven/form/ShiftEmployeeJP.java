@@ -12,7 +12,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
@@ -77,7 +80,7 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(127, 127, 127));
-        jLabel7.setText(" Danh sách các ca làm");
+        jLabel7.setText(" Danh sách các ca làm đã đăng kí");
 
         spTable1.setBorder(null);
 
@@ -119,7 +122,7 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder2Layout.createSequentialGroup()
-                        .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                        .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(panelBorder2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
@@ -177,7 +180,10 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(52, 52, 52)
+                                .addComponent(jLabelId))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
@@ -185,26 +191,20 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBoxShift, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                .addComponent(jComboBoxShift, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabelId)
-                                .addGap(216, 216, 216))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButtonEdit)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButtonDelete))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButtonAdd)
-                                        .addGap(23, 23, 23)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonEdit)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButtonReset)
-                                .addGap(18, 18, 18)))))
+                                .addComponent(jButtonDelete))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonAdd)
+                                .addGap(23, 23, 23)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonReset)))
+                .addGap(18, 18, 18)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -215,11 +215,11 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
                 .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabelId)
-                .addGap(53, 53, 53)
-                .addComponent(jLabel5)
-                .addGap(27, 27, 27)
+                .addGap(105, 105, 105)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabelId))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldWorkDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -245,11 +245,35 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonAddActionPerformed
     public void insertShift() {
         try {
+            // Lấy ngày làm việc từ trường nhập liệu
+            String workDayString = jTextFieldWorkDay.getText();
+
+            // Chuyển đổi ngày làm việc từ chuỗi sang đối tượng Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date workDay = dateFormat.parse(workDayString);
+
+            // Kiểm tra xem ngày làm việc có lớn hơn 1 ngày so với ngày hiện tại hay không
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1); // Thêm 1 ngày vào ngày hiện tại
+            Date currentDatePlusOne = calendar.getTime();
+
+            if (workDay.compareTo(currentDatePlusOne) <= 0) {
+                // Ngày làm việc không lớn hơn 1 ngày so với ngày hiện tại
+                JOptionPane.showMessageDialog(this, "Ngày làm việc bắt đầu ít nhất 2 ngày so với ngày hiện tại.");
+                return; // Dừng việc thực hiện tiếp theo
+            }
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            int shift_customer_id = 0;
+            PreparedStatement pst1 = sqlConn.prepareStatement("select * from shift where shift_name = ?");
+            pst1.setString(1, (String) jComboBoxShift.getSelectedItem());
+            ResultSet rs1 = pst1.executeQuery();
+            while (rs1.next()) {
+                shift_customer_id = rs1.getInt("id");
+            }
             PreparedStatement pst = sqlConn.prepareStatement("insert into shift_employee(workday,employee,shift)value(?,?,?)");
             pst.setString(1, jTextFieldWorkDay.getText());
             pst.setInt(2, Session.getId());
-            pst.setString(3, (String) jComboBoxShift.getSelectedItem());
+            pst.setInt(3, shift_customer_id);
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this, "Đã thêm một ca làm mới!");
             ConnectMySQL.closeConnection();
@@ -309,6 +333,7 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
         int selectionRow = tableShift.getSelectedRow();
         jLabelId.setText(recordTable.getValueAt(selectionRow, 0).toString());
         jTextFieldWorkDay.setText(recordTable.getValueAt(selectionRow, 1).toString());
+        jComboBoxShift.setSelectedItem(recordTable.getValueAt(selectionRow, 2).toString());
     }//GEN-LAST:event_tableShiftMouseClicked
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
@@ -340,14 +365,38 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
         // TODO add your handling code here:
         jLabelId.setText("");
         jTextFieldWorkDay.setText("");
-        jComboBoxShift.removeAllItems();
+        jComboBoxShift.setSelectedIndex(0);
     }//GEN-LAST:event_jButtonResetActionPerformed
     public void editShift() {
         try {
+            // Lấy ngày làm việc từ trường nhập liệu
+            String workDayString = jTextFieldWorkDay.getText();
+
+            // Chuyển đổi ngày làm việc từ chuỗi sang đối tượng Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date workDay = dateFormat.parse(workDayString);
+
+            // Kiểm tra xem ngày làm việc có lớn hơn 1 ngày so với ngày hiện tại hay không
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1); // Thêm 1 ngày vào ngày hiện tại
+            Date currentDatePlusOne = calendar.getTime();
+
+            if (workDay.compareTo(currentDatePlusOne) <= 0) {
+                // Ngày làm việc không lớn hơn 1 ngày so với ngày hiện tại
+                JOptionPane.showMessageDialog(this, "Ngày làm việc bắt đầu ít nhất 2 ngày so với ngày hiện tại.");
+                return; // Dừng việc thực hiện tiếp theo
+            }
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
-            PreparedStatement pst = sqlConn.prepareStatement("update shift_employee set shift_name = ? where id = ?");
+            int shift_customer_id = 0;
+            PreparedStatement pst1 = sqlConn.prepareStatement("select * from shift where shift_name = ?");
+            pst1.setString(1, (String) jComboBoxShift.getSelectedItem());
+            ResultSet rs1 = pst1.executeQuery();
+            while (rs1.next()) {
+                shift_customer_id = rs1.getInt("id");
+            }
+            PreparedStatement pst = sqlConn.prepareStatement("update shift_employee set workday = ?, shift = ? where id = ?");
             pst.setString(1, jTextFieldWorkDay.getText());
-            pst.setString(2, (String) jComboBoxShift.getSelectedItem());
+            pst.setInt(2, shift_customer_id);
             pst.setInt(3, Integer.parseInt(jLabelId.getText()));
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this, "Đã chỉnh sửa ca làm " + jTextFieldWorkDay.getText());

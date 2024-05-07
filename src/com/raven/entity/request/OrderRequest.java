@@ -71,6 +71,11 @@ public class OrderRequest {
         this.voucherId = voucherId;
     }
 
+    public OrderRequest(int payment, int employeeId) {
+        this.payment = payment;
+        this.employeeId = employeeId;
+    }
+
     public OrderRequest() {
     }
     

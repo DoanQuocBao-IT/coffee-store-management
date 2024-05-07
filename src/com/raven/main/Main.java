@@ -7,11 +7,16 @@ package com.raven.main;
 
 import com.raven.event.EventMenuSelected;
 import com.raven.form.BeverageJP;
+import com.raven.form.DashboardEmpoyeeJP;
 import com.raven.form.OrderJP;
 import com.raven.form.ShiftJP;
 import com.raven.form.OrderManageJP;
 import com.raven.form.DashboardJP;
+import com.raven.form.EditPasswordAdminJP;
+import com.raven.form.EditPasswordEmployeeJP;
+import com.raven.form.EmployeeJP;
 import com.raven.form.LoginJF;
+import com.raven.form.SalaryManageJP;
 import com.raven.form.ShiftEmployeeJP;
 import com.raven.form.VoucherJP;
 import com.raven.form.WelcomeJP;
@@ -29,24 +34,35 @@ public class Main extends javax.swing.JFrame {
      */
     private WelcomeJP formWelcome;
     private DashboardJP formDashboard;
+    private DashboardEmpoyeeJP formDashboardEmployee;
+
     private OrderJP formOrder;
     private ShiftJP formShift;
     private ShiftEmployeeJP formShiftEmployee;
     private BeverageJP formBeverage;
     private VoucherJP formVoucher;
     private OrderManageJP formOrderManageJP;
+    private EditPasswordEmployeeJP formEditPasswordEmployee;
+    private EditPasswordAdminJP formEditPasswordAdmin;
+    private SalaryManageJP formSalaryManage;
+    private EmployeeJP formEmployee;
 
     public Main() {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         formWelcome = new WelcomeJP();
         formDashboard = new DashboardJP();
+        formDashboardEmployee = new DashboardEmpoyeeJP();
         formOrder = new OrderJP();
         formShift = new ShiftJP();
         formShiftEmployee = new ShiftEmployeeJP();
         formBeverage = new BeverageJP();
         formVoucher = new VoucherJP();
         formOrderManageJP = new OrderManageJP();
+        formEditPasswordEmployee = new EditPasswordEmployeeJP();
+        formEditPasswordAdmin = new EditPasswordAdminJP();
+        formSalaryManage = new SalaryManageJP();
+        formEmployee = new EmployeeJP();
         menu.initMoving(Main.this);
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
@@ -58,14 +74,12 @@ public class Main extends javax.swing.JFrame {
                                 case 0 ->
                                     setForm(formOrder);
                                 case 1 ->
-                                    setForm(formDashboard);
-                                case 2 ->
-                                    setForm(formShiftEmployee);
-                                case 3 ->
-                                    setForm(formShiftEmployee);
+                                    setForm(formDashboardEmployee);
                                 case 5 ->
                                     setForm(formShiftEmployee);
-                                case 6 -> {
+                                case 6 ->
+                                    setForm(formEditPasswordEmployee);
+                                case 7 -> {
                                     Session.setLoggedIn(false);
                                     Session.setId(0);
                                     Session.setName("");
@@ -92,10 +106,23 @@ public class Main extends javax.swing.JFrame {
                                     setForm(formShift);
                                 case 4 ->
                                     setForm(formVoucher);
-                                case 5 ->
+                                case 8 ->
+                                    setForm(formEmployee);
+                                case 9 ->
+                                    setForm(formSalaryManage);
+                                case 10 ->
                                     setForm(formShift);
-                                case 6 ->
-                                    setForm(formShift);
+                                case 11 ->
+                                    setForm(formEditPasswordAdmin);
+                                case 12 -> {
+                                    Session.setLoggedIn(false);
+                                    Session.setId(0);
+                                    Session.setName("");
+                                    Session.setRole("");
+                                    LoginJF LoginForm = new LoginJF();
+                                    LoginForm.setVisible(true);
+                                    Main.this.setVisible(false);
+                                }
                                 default -> {
                                     // Xử lý trường hợp không khớp
                                 }
