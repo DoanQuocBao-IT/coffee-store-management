@@ -56,6 +56,11 @@ public class OrderJP extends javax.swing.JPanel {
 
         jButtonReceipt.setText("Thanh toàn");
         jButtonReceipt.setActionCommand("Thanh toán");
+        jButtonReceipt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReceiptActionPerformed(evt);
+            }
+        });
 
         panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -164,6 +169,9 @@ public class OrderJP extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReceiptActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonReceiptActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;

@@ -5,6 +5,29 @@
  */
 package com.raven.form;
 
+import com.raven.main.ConnectMySQL;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import static jdk.jfr.consumer.EventStream.openFile;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
 /**
  *
  * @author RAVEN
@@ -16,6 +39,7 @@ public class OrderManageJP extends javax.swing.JPanel {
      */
     public OrderManageJP() {
         initComponents();
+        updateTable();
     }
 
     /**
@@ -31,7 +55,8 @@ public class OrderManageJP extends javax.swing.JPanel {
         panelBorder1 = new com.raven.swing.PanelBorder();
         jLabel1 = new javax.swing.JLabel();
         spTable = new javax.swing.JScrollPane();
-        table = new com.raven.swing.Table();
+        tableOrder = new com.raven.swing.Table();
+        jButton1 = new javax.swing.JButton();
 
         panel.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -43,7 +68,7 @@ public class OrderManageJP extends javax.swing.JPanel {
 
         spTable.setBorder(null);
 
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        tableOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -59,7 +84,15 @@ public class OrderManageJP extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        spTable.setViewportView(table);
+        spTable.setViewportView(tableOrder);
+
+        jButton1.setText("Xuất Excel");
+        jButton1.setActionCommand("btnExport");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
@@ -69,18 +102,23 @@ public class OrderManageJP extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
+                        .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(panelBorder1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(14, 14, 14))))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
         );
 
@@ -106,12 +144,99 @@ public class OrderManageJP extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try{
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile !=null){
+                saveFile = new File(saveFile.toString()+ ".xls");
+                Workbook wb = new HSSFWorkbook();
+                Sheet sheet = wb.createSheet("Orders");
+                
+                Row rowCol = sheet.createRow(0);
+                
+                for (int i = 0; i< tableOrder.getColumnCount(); i++){
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tableOrder.getColumnName(i));
+                }
+                
+                for (int i = 0; i< tableOrder.getRowCount(); i++){
+                    Row row = sheet.createRow(i);
+                    for (int j = 0; j < tableOrder.getColumnCount(); j++){
+                        Cell cell = row.createCell(j);
+                        if (tableOrder.getValueAt(i, j).toString()!= null)
+                            cell.setCellValue(tableOrder.getValueAt(i, j).toString());
+                    }
+                }
+                
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                openFile(saveFile.toString());
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Export Err");
+            }
+        }
+        catch(IOException ex){
+        
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void updateTable(){
+        try {
+            Connection sqlConn = ConnectMySQL.ConnectMySQL();
+            PreparedStatement pst = sqlConn.prepareStatement(
+                    "SELECT \n" +
+                    "    orders.id AS id,\n" +
+                    "    employee.name AS employee,\n" +
+                    "    created_at,\n" +
+                    "    voucher,\n" +
+                    "    payment\n" +
+                    "FROM\n" +
+                    "    orders\n" +
+                    "        LEFT JOIN\n" +
+                    "    employee ON orders.employee = employee.id");
+            ResultSet rs = pst.executeQuery();
+            ResultSetMetaData stData = rs.getMetaData();
+            int q = stData.getColumnCount();
+        DefaultTableModel recordTable = (DefaultTableModel) tableOrder.getModel();
+            recordTable.setRowCount(0);
+            while (rs.next()) {
+                Vector columnData = new Vector();
+                for (int i = 1; i <= q; i++) {
+                    columnData.add(rs.getString("id"));
+                    columnData.add(rs.getString("employee"));
+                    columnData.add(rs.getString("created_at"));
+                    columnData.add(rs.getString("voucher"));
+                    columnData.add(rs.getString("payment"));
+                }
+                recordTable.addRow(columnData);
+            }
+            ConnectMySQL.closeConnection();
+        } catch (Exception ex) {
+        }
+    }
+    
+    private void openFile(String file){
+        try{
+            File path = new File(file);
+            Desktop.getDesktop().open(path);
+        }
+        catch(IOException ex ){
+            System.out.print(ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane panel;
     private com.raven.swing.PanelBorder panelBorder1;
     private javax.swing.JScrollPane spTable;
-    private com.raven.swing.Table table;
+    private com.raven.swing.Table tableOrder;
     // End of variables declaration//GEN-END:variables
 }

@@ -131,6 +131,9 @@
         <Property name="text" type="java.lang.String" value="Thanh to&#xe0;n"/>
         <Property name="actionCommand" type="java.lang.String" value="Thanh to&#xe1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonReceiptActionPerformed"/>
+      </Events>
     </Component>
     <Container class="com.raven.swing.PanelBorder" name="panelBorder1">
       <Properties>
