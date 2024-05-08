@@ -6,7 +6,6 @@ package com.raven.form;
 
 import com.raven.main.ConnectMySQL;
 import com.raven.main.Session;
-import com.raven.utils.AppUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
