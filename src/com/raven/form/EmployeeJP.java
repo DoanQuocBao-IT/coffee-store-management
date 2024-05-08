@@ -399,7 +399,7 @@ public class EmployeeJP extends javax.swing.JPanel {
         txtPhone.setText(recordTable.getValueAt(selectionRow, 3).toString());
         txtUsername.setText(recordTable.getValueAt(selectionRow, 4).toString());
         txtPassword.setText(recordTable.getValueAt(selectionRow, 5).toString());
-        setRadioGender(recordTable.getValueAt(selectionRow, 6).toString());
+        setRadioStatus(recordTable.getValueAt(selectionRow, 6).toString());
         
     }//GEN-LAST:event_tableShiftMouseClicked
 

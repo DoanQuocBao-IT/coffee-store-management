@@ -6,6 +6,7 @@
 package com.raven.form;
 
 import com.raven.main.ConnectMySQL;
+import com.raven.utils.AppUtils;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,7 +41,6 @@ public class SalaryManageJP extends javax.swing.JPanel {
      */
     public SalaryManageJP() {
         initComponents();
-        updateTable();
     }
 
     /**
@@ -58,6 +58,12 @@ public class SalaryManageJP extends javax.swing.JPanel {
         spTable = new javax.swing.JScrollPane();
         tableOrder = new com.raven.swing.Table();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtStartDate = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtEndDate = new javax.swing.JTextField();
+        btnGetDât = new javax.swing.JButton();
 
         panel.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -65,7 +71,7 @@ public class SalaryManageJP extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(127, 127, 127));
-        jLabel1.setText("Danh sách các hóa đơn");
+        jLabel1.setText("Bảng ghi công");
 
         spTable.setBorder(null);
 
@@ -74,7 +80,7 @@ public class SalaryManageJP extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Nhân viên", "Ngày tạo hóa đơn", "Mã khuyến mãi", "Tổng tiền thanh toán"
+                "ID", "Nhân viên", "Ngày làm việc", "Ca làm việc", "Tổng tiền thanh toán"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -95,6 +101,24 @@ public class SalaryManageJP extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setText("Ngày bắt đầu: ");
+
+        txtStartDate.setText("19/05/2024");
+
+        jLabel3.setText("-----------------");
+
+        jLabel4.setText("Ngày kết thúc");
+
+        txtEndDate.setText("20/05/2024");
+
+        btnGetDât.setText("Lấy dữ liệu");
+        btnGetDât.setActionCommand("btnExport");
+        btnGetDât.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGetDâtActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
@@ -105,10 +129,24 @@ public class SalaryManageJP extends javax.swing.JPanel {
                     .addGroup(panelBorder1Layout.createSequentialGroup()
                         .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
+                        .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(panelBorder1Layout.createSequentialGroup()
+                                .addGap(66, 66, 66)
+                                .addComponent(jLabel2)
+                                .addGap(26, 26, 26)
+                                .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(65, 65, 65)
+                                .addComponent(jLabel3)
+                                .addGap(86, 86, 86)
+                                .addComponent(jLabel4)
+                                .addGap(108, 108, 108)
+                                .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnGetDât, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(14, 14, 14))))
         );
         panelBorder1Layout.setVerticalGroup(
@@ -118,9 +156,17 @@ public class SalaryManageJP extends javax.swing.JPanel {
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+                .addGap(12, 12, 12)
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGetDât, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(61, 61, 61)
+                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -153,13 +199,13 @@ public class SalaryManageJP extends javax.swing.JPanel {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             String currentDate = dateFormat.format(new Date());
             // Thêm ngày hiện tại vào tên file
-            String fileName = "Orders_" + currentDate + ".xls";
+            String fileName = "timeSheet_" + currentDate + ".xls";
             jFileChooser.setSelectedFile(new File(fileName));
             jFileChooser.showSaveDialog(this);
             File saveFile = jFileChooser.getSelectedFile();
             if (saveFile != null) {
                 Workbook wb = new HSSFWorkbook();
-                Sheet sheet = wb.createSheet("Orders");
+                Sheet sheet = wb.createSheet("timeSheets");
                 Row rowCol = sheet.createRow(0);
                 for (int i = 0; i < tableOrder.getColumnCount(); i++) {
                     Cell cell = rowCol.createCell(i);
@@ -180,7 +226,7 @@ public class SalaryManageJP extends javax.swing.JPanel {
                 out.close();
                 openFile(saveFile.toString());
             } else {
-                JOptionPane.showMessageDialog(null, "Export Err");
+                JOptionPane.showMessageDialog(null, "s Err");
             }
         } catch (IOException ex) {
 
@@ -188,22 +234,25 @@ public class SalaryManageJP extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnGetDâtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetDâtActionPerformed
+        // TODO add your handling code here:
+        updateTable();
+    }//GEN-LAST:event_btnGetDâtActionPerformed
+
     private void updateTable() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
             PreparedStatement pst = sqlConn.prepareStatement(
-                    "SELECT \n"
-                    + "    orders.id AS id,\n"
-                    + "    employee.name AS employee,\n"
-                    + "    orders.created_at AS created_at,\n"
-                    + "    voucher.code AS voucher,\n"
-                    + "    orders.payment AS payment\n"
-                    + "FROM\n"
-                    + "    orders\n"
-                    + "LEFT JOIN\n"
-                    + "    employee ON orders.employee = employee.id\n"
-                    + "LEFT JOIN\n"
-                    + "    voucher ON orders.voucher = voucher.id;");
+            
+            "select E.id, E.username, SE.workday, S.shift_name, S.salary from Employee E \n" +
+                "LEFT JOIN shift_employee SE on E.id = SE.employee\n" +
+                "LEFT JOIN shift S on SE.shift = S.id\n"
+            + "WHER SE.workday <= ? and SE.workday >= ?"
+            );
+            
+            pst.setString(1, AppUtils.ConertStringToDate(txtStartDate.getText()));
+            pst.setString(2, AppUtils.ConertStringToDate(txtEndDate.getText()));
+
             ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
             int q = stData.getColumnCount();
@@ -213,10 +262,10 @@ public class SalaryManageJP extends javax.swing.JPanel {
                 Vector columnData = new Vector();
                 for (int i = 1; i <= q; i++) {
                     columnData.add(rs.getString("id"));
-                    columnData.add(rs.getString("employee"));
-                    columnData.add(rs.getString("created_at"));
-                    columnData.add(rs.getString("voucher"));
-                    columnData.add(rs.getString("payment"));
+                    columnData.add(rs.getString("name"));
+                    columnData.add(rs.getString("workday"));
+                    columnData.add(rs.getString("shift_name"));
+                    columnData.add(rs.getString("salary"));
                 }
                 recordTable.addRow(columnData);
             }
@@ -234,11 +283,17 @@ public class SalaryManageJP extends javax.swing.JPanel {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGetDât;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLayeredPane panel;
     private com.raven.swing.PanelBorder panelBorder1;
     private javax.swing.JScrollPane spTable;
     private com.raven.swing.Table tableOrder;
+    private javax.swing.JTextField txtEndDate;
+    private javax.swing.JTextField txtStartDate;
     // End of variables declaration//GEN-END:variables
 }

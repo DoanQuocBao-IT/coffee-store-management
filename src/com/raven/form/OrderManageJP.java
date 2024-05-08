@@ -6,6 +6,7 @@
 package com.raven.form;
 
 import com.raven.main.ConnectMySQL;
+import com.raven.utils.AppUtils;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,7 +41,6 @@ public class OrderManageJP extends javax.swing.JPanel {
      */
     public OrderManageJP() {
         initComponents();
-        updateTable();
     }
 
     /**
@@ -58,6 +58,12 @@ public class OrderManageJP extends javax.swing.JPanel {
         spTable = new javax.swing.JScrollPane();
         tableOrder = new com.raven.swing.Table();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtStartDate = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtEndDate = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         panel.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -95,21 +101,51 @@ public class OrderManageJP extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setText("Ngày bắt đầu: ");
+
+        txtStartDate.setText("19/05/2024");
+
+        jLabel3.setText("-----------------");
+
+        jLabel4.setText("Ngày kết thúc");
+
+        txtEndDate.setText("20/05/2024");
+
+        jButton2.setText("Lấy dữ liệu");
+        jButton2.setActionCommand("btnExport");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelBorder1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1))
+                        .addGap(592, 592, 592)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addGap(271, 271, 271)
+                        .addComponent(jLabel3)
+                        .addGap(123, 123, 123)
+                        .addComponent(jLabel4)
+                        .addGap(27, 27, 27)
+                        .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(14, 14, 14))))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(47, 47, 47))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,8 +155,16 @@ public class OrderManageJP extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -188,6 +232,11 @@ public class OrderManageJP extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        updateTable();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void updateTable() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
@@ -203,7 +252,12 @@ public class OrderManageJP extends javax.swing.JPanel {
                     + "LEFT JOIN\n"
                     + "    employee ON orders.employee = employee.id\n"
                     + "LEFT JOIN\n"
-                    + "    voucher ON orders.voucher = voucher.id;");
+                    + "    voucher ON orders.voucher = voucher.id\n"
+                    + "WHERE created_at >= ? AND created_at <= ?");
+            
+                        
+            pst.setString(1, AppUtils.ConertStringToDate(txtStartDate.getText()));
+            pst.setString(2, AppUtils.ConertStringToDate(txtEndDate.getText()));
             ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
             int q = stData.getColumnCount();
@@ -222,6 +276,7 @@ public class OrderManageJP extends javax.swing.JPanel {
             }
             ConnectMySQL.closeConnection();
         } catch (Exception ex) {
+            System.out.print(ex);
         }
     }
 
@@ -235,10 +290,16 @@ public class OrderManageJP extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLayeredPane panel;
     private com.raven.swing.PanelBorder panelBorder1;
     private javax.swing.JScrollPane spTable;
     private com.raven.swing.Table tableOrder;
+    private javax.swing.JTextField txtEndDate;
+    private javax.swing.JTextField txtStartDate;
     // End of variables declaration//GEN-END:variables
 }
