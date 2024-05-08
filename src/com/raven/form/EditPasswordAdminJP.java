@@ -4,10 +4,9 @@
  */
 package com.raven.form;
 
-import com.sun.jdi.connect.spi.Connection;
 import com.raven.main.ConnectMySQL;
 import com.raven.main.Session;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
