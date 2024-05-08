@@ -285,8 +285,8 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
     public void updateDB() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
-            PreparedStatement pst = sqlConn.prepareStatement("select e.id, e.workday, s.shift_name, s.start_at, s.end_at, s.salary from shift_employee e join shift s where e.shift = s.id");
-
+            PreparedStatement pst = sqlConn.prepareStatement("select e.id, e.workday, s.shift_name, s.start_at, s.end_at, s.salary from shift_employee e join shift s where e.shift = s.id and e.employee = ?");
+            pst.setInt(1, Session.getId());
             ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
             int q = stData.getColumnCount();

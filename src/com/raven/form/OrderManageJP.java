@@ -17,6 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Vector;
 import javax.swing.JFileChooser;
@@ -41,6 +43,21 @@ public class OrderManageJP extends javax.swing.JPanel {
      */
     public OrderManageJP() {
         initComponents();
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Trừ 2 tuần từ ngày hiện tại để có thời gian bắt đầu
+        LocalDate startDate = currentDate.minusWeeks(2);
+
+        // Định dạng ngày thành chuỗi
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String startDateString = startDate.format(formatter);
+        String endDateString = currentDate.format(formatter);
+
+        // Tiếp tục với câu lệnh của bạn
+        txtStartDate.setText(startDateString);
+        txtEndDate.setText(endDateString);
+        updateTable();
     }
 
     /**
@@ -254,8 +271,7 @@ public class OrderManageJP extends javax.swing.JPanel {
                     + "LEFT JOIN\n"
                     + "    voucher ON orders.voucher = voucher.id\n"
                     + "WHERE created_at >= ? AND created_at <= ?");
-            
-                        
+
             pst.setString(1, AppUtils.ConertStringToDate(txtStartDate.getText()));
             pst.setString(2, AppUtils.ConertStringToDate(txtEndDate.getText()));
             ResultSet rs = pst.executeQuery();

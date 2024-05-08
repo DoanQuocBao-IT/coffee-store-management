@@ -2,14 +2,14 @@ package com.raven.form;
 
 import com.raven.main.ConnectMySQL;
 import com.raven.model.Model_Card;
-import com.raven.model.StatusType;
 import com.raven.swing.ScrollBar;
 import java.awt.Color;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -59,8 +59,18 @@ public class DashboardJP extends javax.swing.JPanel {
     public void updateDB() {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
-            PreparedStatement pst = sqlConn.prepareStatement("select * from employee");
-
+            // Chuẩn bị câu lệnh SQL
+            String sql = "SELECT e.id, e.name, e.phone, e.gender, e.user_type, s.workday, sh.shift_name, sh.end_at, sh.start_at "
+                    + "FROM employee e "
+                    + "JOIN shift_employee s ON e.id = s.employee "
+                    + "JOIN shift sh ON s.shift = sh.id "
+                    + " WHERE s.workday = ? ";
+            // Chuẩn bị câu lệnh SQL
+            PreparedStatement pst = sqlConn.prepareStatement(sql);
+            // Định dạng ngày thành chuỗi và đặt giá trị vào câu lệnh SQL
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedToday = LocalDate.now().format(formatter);
+            pst.setString(1, formattedToday);
             ResultSet rs = pst.executeQuery();
             ResultSetMetaData stData = rs.getMetaData();
             int q = stData.getColumnCount();
@@ -75,14 +85,17 @@ public class DashboardJP extends javax.swing.JPanel {
                     columnData.add(rs.getString("phone"));
                     columnData.add(rs.getString("gender"));
                     columnData.add(rs.getString("user_type"));
-                    columnData.add(rs.getString("joind_at"));
-                    columnData.add(rs.getString("status").equals("active") ? StatusType.APPROVED : StatusType.PENDING);
+                    columnData.add(rs.getString("start_at"));
+                    columnData.add(rs.getString("end_at"));
+                    columnData.add(rs.getString("workday"));
+
                 }
                 recordTable.addRow(columnData);
             }
             ConnectMySQL.closeConnection();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
+            System.out.print(ex);
         }
 
     }
@@ -118,7 +131,7 @@ public class DashboardJP extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(127, 127, 127));
-        jLabel1.setText("Standard Table Design");
+        jLabel1.setText("Lịch làm việc hôm nay");
 
         spTable.setBorder(null);
 
@@ -127,7 +140,7 @@ public class DashboardJP extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Name", "Phone", "Gender", "User Type", "Joined", "Status"
+                "ID", "Tên nhân viên", "Số điện thoại", "Giới tính", "Chức vụ", "Thời gian bắt đầu", "Thời gian kết thúc"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -148,11 +161,11 @@ public class DashboardJP extends javax.swing.JPanel {
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(5, 5, 5)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 646, Short.MAX_VALUE))
+                        .addGap(0, 667, Short.MAX_VALUE))
                     .addComponent(spTable))
                 .addContainerGap())
         );
@@ -163,7 +176,7 @@ public class DashboardJP extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+                .addGap(5, 5, 5))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
