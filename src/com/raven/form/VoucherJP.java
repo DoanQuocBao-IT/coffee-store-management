@@ -103,7 +103,7 @@ public class VoucherJP extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -116,6 +116,10 @@ public class VoucherJP extends javax.swing.JPanel {
             }
         });
         spTable1.setViewportView(tableVoucher);
+        if (tableVoucher.getColumnModel().getColumnCount() > 0) {
+            tableVoucher.getColumnModel().getColumn(0).setPreferredWidth(2);
+            tableVoucher.getColumnModel().getColumn(4).setPreferredWidth(3);
+        }
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);

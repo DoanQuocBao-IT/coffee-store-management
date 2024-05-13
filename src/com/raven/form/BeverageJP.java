@@ -99,6 +99,12 @@ public class BeverageJP extends javax.swing.JPanel {
             }
         });
         spTable1.setViewportView(tableBeverage);
+        if (tableBeverage.getColumnModel().getColumnCount() > 0) {
+            tableBeverage.getColumnModel().getColumn(0).setPreferredWidth(4);
+            tableBeverage.getColumnModel().getColumn(2).setPreferredWidth(3);
+            tableBeverage.getColumnModel().getColumn(3).setPreferredWidth(6);
+            tableBeverage.getColumnModel().getColumn(4).setPreferredWidth(6);
+        }
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);

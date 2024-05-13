@@ -116,11 +116,10 @@ public class ShiftJP extends javax.swing.JPanel {
         });
         spTable1.setViewportView(tableShift);
         if (tableShift.getColumnModel().getColumnCount() > 0) {
-            tableShift.getColumnModel().getColumn(0).setResizable(false);
-            tableShift.getColumnModel().getColumn(1).setResizable(false);
-            tableShift.getColumnModel().getColumn(2).setResizable(false);
-            tableShift.getColumnModel().getColumn(3).setResizable(false);
-            tableShift.getColumnModel().getColumn(4).setResizable(false);
+            tableShift.getColumnModel().getColumn(0).setPreferredWidth(3);
+            tableShift.getColumnModel().getColumn(2).setPreferredWidth(6);
+            tableShift.getColumnModel().getColumn(3).setPreferredWidth(6);
+            tableShift.getColumnModel().getColumn(4).setPreferredWidth(6);
         }
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
@@ -157,7 +156,6 @@ public class ShiftJP extends javax.swing.JPanel {
 
         jButtonEdit.setBackground(new java.awt.Color(255, 255, 153));
         jButtonEdit.setText("Chỉnh sửa ca làm");
-        jButtonEdit.setActionCommand("Chỉnh sửa ca làm");
         jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditActionPerformed(evt);

@@ -109,6 +109,11 @@ public class SalaryManageJP extends javax.swing.JPanel {
             }
         });
         spTable.setViewportView(tableOrder);
+        if (tableOrder.getColumnModel().getColumnCount() > 0) {
+            tableOrder.getColumnModel().getColumn(0).setPreferredWidth(2);
+            tableOrder.getColumnModel().getColumn(2).setPreferredWidth(5);
+            tableOrder.getColumnModel().getColumn(4).setPreferredWidth(5);
+        }
 
         jButton1.setText("Xuất Excel");
         jButton1.setActionCommand("btnExport");
@@ -260,34 +265,32 @@ public class SalaryManageJP extends javax.swing.JPanel {
         try {
             Connection sqlConn = ConnectMySQL.ConnectMySQL();
             PreparedStatement pst = sqlConn.prepareStatement(
-            
-            "select E.id, E.username, SE.workday, S.shift_name, S.salary from Employee E \n" +
-                "LEFT JOIN shift_employee SE on E.id = SE.employee\n" +
-                "LEFT JOIN shift S on SE.shift = S.id\n"
-            + "WHERE SE.workday >= ? and SE.workday <= ?"
+                    "SELECT E.id, E.username, SE.workday, S.shift_name, FORMAT(S.salary * (TIME_TO_SEC(S.end_at) - TIME_TO_SEC(S.start_at)) / 3600, 2) AS total_salary "
+                    + "FROM Employee E "
+                    + "LEFT JOIN shift_employee SE ON E.id = SE.employee "
+                    + "LEFT JOIN shift S ON SE.shift = S.id "
+                    + "WHERE SE.workday BETWEEN ? AND ?"
             );
-            
+
             pst.setString(1, AppUtils.ConertStringToDate(txtStartDate.getText()));
             pst.setString(2, AppUtils.ConertStringToDate(txtEndDate.getText()));
 
             ResultSet rs = pst.executeQuery();
-            ResultSetMetaData stData = rs.getMetaData();
-            int q = stData.getColumnCount();
             DefaultTableModel recordTable = (DefaultTableModel) tableOrder.getModel();
             recordTable.setRowCount(0);
+
             while (rs.next()) {
                 Vector columnData = new Vector();
-                for (int i = 1; i <= q; i++) {
-                    columnData.add(rs.getString("id"));
-                    columnData.add(rs.getString("name"));
-                    columnData.add(rs.getString("workday"));
-                    columnData.add(rs.getString("shift_name"));
-                    columnData.add(rs.getString("salary"));
-                }
+                columnData.add(rs.getString("id"));
+                columnData.add(rs.getString("username")); // Changed "name" to "username"
+                columnData.add(rs.getString("workday"));
+                columnData.add(rs.getString("shift_name"));
+                columnData.add(rs.getString("total_salary"));
                 recordTable.addRow(columnData);
             }
             ConnectMySQL.closeConnection();
         } catch (Exception ex) {
+            ex.printStackTrace(); // Handle exceptions appropriately, printing stack trace for debugging purposes
         }
     }
 

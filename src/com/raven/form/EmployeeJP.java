@@ -87,7 +87,7 @@ public class EmployeeJP extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã nhân viên", "Tên nhân viên", "Giới tính", "Số điện thoại", "Tên đăng nhập", "Chức vụ", "Trạng thái"
+                "ID", "Tên nhân viên", "Giới tính", "Số điện thoại", "Tên đăng nhập", "Chức vụ", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -106,12 +106,8 @@ public class EmployeeJP extends javax.swing.JPanel {
         spTable1.setViewportView(tableShift);
         if (tableShift.getColumnModel().getColumnCount() > 0) {
             tableShift.getColumnModel().getColumn(0).setResizable(false);
-            tableShift.getColumnModel().getColumn(1).setResizable(false);
-            tableShift.getColumnModel().getColumn(2).setResizable(false);
-            tableShift.getColumnModel().getColumn(3).setResizable(false);
-            tableShift.getColumnModel().getColumn(4).setResizable(false);
-            tableShift.getColumnModel().getColumn(5).setResizable(false);
-            tableShift.getColumnModel().getColumn(6).setResizable(false);
+            tableShift.getColumnModel().getColumn(0).setPreferredWidth(1);
+            tableShift.getColumnModel().getColumn(2).setPreferredWidth(5);
         }
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);

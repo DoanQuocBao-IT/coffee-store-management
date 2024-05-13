@@ -162,6 +162,12 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
         spTable.setViewportView(table);
+        if (table.getColumnModel().getColumnCount() > 0) {
+            table.getColumnModel().getColumn(0).setPreferredWidth(3);
+            table.getColumnModel().getColumn(2).setPreferredWidth(6);
+            table.getColumnModel().getColumn(3).setPreferredWidth(3);
+            table.getColumnModel().getColumn(4).setPreferredWidth(10);
+        }
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
@@ -212,6 +218,11 @@ public class OrderJP extends javax.swing.JPanel {
             }
         });
         spTable1.setViewportView(tbl_sp);
+        if (tbl_sp.getColumnModel().getColumnCount() > 0) {
+            tbl_sp.getColumnModel().getColumn(0).setPreferredWidth(3);
+            tbl_sp.getColumnModel().getColumn(2).setPreferredWidth(6);
+            tbl_sp.getColumnModel().getColumn(3).setPreferredWidth(6);
+        }
 
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(127, 127, 127));

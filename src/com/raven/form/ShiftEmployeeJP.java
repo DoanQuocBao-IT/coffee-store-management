@@ -108,10 +108,11 @@ public class ShiftEmployeeJP extends javax.swing.JPanel {
         spTable1.setViewportView(tableShift);
         if (tableShift.getColumnModel().getColumnCount() > 0) {
             tableShift.getColumnModel().getColumn(0).setResizable(false);
-            tableShift.getColumnModel().getColumn(1).setResizable(false);
-            tableShift.getColumnModel().getColumn(3).setResizable(false);
-            tableShift.getColumnModel().getColumn(4).setResizable(false);
-            tableShift.getColumnModel().getColumn(5).setResizable(false);
+            tableShift.getColumnModel().getColumn(0).setPreferredWidth(3);
+            tableShift.getColumnModel().getColumn(1).setPreferredWidth(5);
+            tableShift.getColumnModel().getColumn(3).setPreferredWidth(5);
+            tableShift.getColumnModel().getColumn(4).setPreferredWidth(5);
+            tableShift.getColumnModel().getColumn(5).setPreferredWidth(5);
         }
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);

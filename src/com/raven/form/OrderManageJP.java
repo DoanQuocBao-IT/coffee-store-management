@@ -109,6 +109,11 @@ public class OrderManageJP extends javax.swing.JPanel {
             }
         });
         spTable.setViewportView(tableOrder);
+        if (tableOrder.getColumnModel().getColumnCount() > 0) {
+            tableOrder.getColumnModel().getColumn(0).setPreferredWidth(2);
+            tableOrder.getColumnModel().getColumn(2).setPreferredWidth(5);
+            tableOrder.getColumnModel().getColumn(4).setPreferredWidth(5);
+        }
 
         jButton1.setText("Xuất Excel");
         jButton1.setActionCommand("btnExport");
